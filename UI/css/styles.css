@@ -48,6 +48,14 @@ body h1{
 	padding-right: 20px;
 }
 
+.centered{
+	font-size: 20px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
 
 
 
