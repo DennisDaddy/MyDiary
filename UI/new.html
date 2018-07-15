@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Register |MyDiary</title>
+	<title>New | MyDiary</title>
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
@@ -11,29 +11,24 @@
 		<div class="navbar-right">
 			<a href="index.html" class="active">Home</a>
 			<a href="entries.html">Diary Entries</a>
-			
+			<a href="profile.html">Profile</a>
+			<a href="#">Log Out</a>
 		</div>		
 	</div>
 	<!-- End Navbar -->
 
-	<h1> Registration Area</h1>
+	<h1> Create New Entry</h1>
 	<hr>
 
 	<!--  Container -->
 	<div class="container">
 		<form class="form">
-			<h2>Register Here</h2>
-			<label><b>Enter Username:</b></label><br>
-			<input type="text" name="text"><br>
-			<label><b>Enter Email:</b></label><br>
-			<input type="text" name="text"><br>
-			<label><b>Enter Password:</b></label><br>
-			<input type="password" name="password"><br>
-			<label><b>Password Confirmation:</b></label><br>
-			<input type="password" name="password"><br>
-			<p><b>Have Account?<a href="login.html"> Login Here</a></b></p>
-			<a href="login.html"><button type="button">Register</button></a>
+			<h2>Add Entry Here</h2>
+			<label><b>Title:</b></label><br>
+			<input type="text" name="text" placeholder="Enter title here.." ><br>
+			<textarea cols="80" rows="5" placeholder="  Enter entry content here.." ></textarea><br>
 			
+			<button type="button">Create</button>
 		</form>
 		
 	</div>     
