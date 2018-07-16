@@ -165,7 +165,7 @@ button:hover{
 	position: relative;
 	display: inline-block;
 	width: 60px;
-	height: 34px;
+	height: 30px;
 }
 
 .switch input {display:none;}
