@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login |Mydiary</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<script src="js/login.js"></script>
+</head>
+<body>
+	<!-- Navbar -->
+	<div class="navbar">
+		<a href="index.html" id="logo">MyDiary</a>
+		<div class="navbar-right">
+			<a href="index.html" class="active">Home</a>
+			<a href="entries.html">Diary Entries</a>
+			
+		</div>		
+	</div>
+	<!-- End Navbar -->
+
+	<h1>Login Area</h1>
+	<hr>
+
+	<!--  Container -->
+	<div class="container">
+		<form class="form" id="form_id" method="post" name="myform" action="index.html" >
+			<h2>Login Here</h2>
+			<label><b>Enter Username:</b></label><br>
+			<input type="text" name="username" id="username"><br><br>
+			<label><b>Enter Password:</b></label><br>
+			<input type="text" name="password" id="password"><br>
+			<p><b>Don't Have Account?<a href="register.html"> Register Here</a></b></p>
+			
+			<input type="button" value="Login" id="submit" class="btn" onclick="validate();">
+			
+		</form>
+		
+	</div>
+    <!-- End Container -->
+
+    <!-- Footer -->
+	<div class="footer">
+		<p>@Copyright 2018</p>		
+	</div>
+
+	<!-- End Footer -->
+	
+
+</body>
+</html>
