@@ -3,6 +3,7 @@
 <head>
 	<title>Login |Mydiary</title>
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<script src="js/login.js"></script>
 </head>
 <body>
 	<!-- Navbar -->
@@ -21,14 +22,15 @@
 
 	<!--  Container -->
 	<div class="container">
-		<form class="form">
+		<form class="form" id="form_id" method="post" name="myform" action="index.html" >
 			<h2>Login Here</h2>
 			<label><b>Enter Username:</b></label><br>
-			<input type="text" name="text"><br><br>
+			<input type="text" name="username" id="username"><br><br>
 			<label><b>Enter Password:</b></label><br>
-			<input type="text" name="text"><br>
+			<input type="text" name="password" id="password"><br>
 			<p><b>Don't Have Account?<a href="register.html"> Register Here</a></b></p>
-			<a href="entries.html"><button type="button">Login</button></a>
+			
+			<input type="button" value="Login" id="submit" class="btn" onclick="validate();">
 			
 		</form>
 		
