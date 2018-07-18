@@ -40,6 +40,12 @@ def login():
     return jsonify({"message": "You are successfully logged in"})
 
 
+@app.route('/diary/api/v1/account', methods=['GET'])
+def get_user_details():
+    """This function retrieves user info"""
+    return jsonify(user_info)
+
+
 @app.route('/diary/api/v1/entries', methods=['POST'])
 
 def create_entry():
