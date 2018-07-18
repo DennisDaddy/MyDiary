@@ -33,6 +33,13 @@ def view_one_entry(entry_id):
         abort(404)
     return jsonify({'entry': entry[0]})
 
+@app.route('/diary/api/v1/entries/<int:entry_id>', methods=['DELETE'])
+def delete_entry(entry_id):
+    entry = [entry for entry in entries if entry['id'] == entry_id]
+    if len(entry) == 0:
+        return jsonify({'message' : "No entry found"})
+    entries.remove(entry[0])
+    return jsonify({'result': True})
 
 if __name__ == '__main__':
     app.run(debug=True)
