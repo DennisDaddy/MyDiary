@@ -29,6 +29,17 @@ def register():
     return jsonify({'message': "You are successfully registered"})
 
 
+@app.route('/diary/api/v1/login', methods=['POST'])
+def login():
+    """This is a method for logging in a user"""
+    username = request.get_json()["username"]
+    password = request.get_json()["password"]
+    if username in user_info:
+        if password == user_info[username]["password"]:
+            return jsonify({"message": "You are successfully logged in"})
+    return jsonify({"message": "You are successfully logged in"})
+
+
 @app.route('/diary/api/v1/entries', methods=['POST'])
 
 def create_entry():
