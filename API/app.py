@@ -23,7 +23,7 @@ def register():
     elif not password:
         return jsonify({"message": "Passord cannot be blank"}), 401
     user_info.update({username:{"email": email, "password": password,
-                      "password_confirmation" : password_confirmation}})
+                                "password_confirmation" : password_confirmation}})
     if username in user_info:
         return jsonify({'message': "You are successfully registered"})
     return jsonify({'message': "You are successfully registered"})
@@ -39,12 +39,10 @@ def login():
             return jsonify({"message": "You are successfully logged in"})
     return jsonify({"message": "You are successfully logged in"})
 
-
 @app.route('/diary/api/v1/account', methods=['GET'])
 def get_user_details():
     """This function retrieves user info"""
     return jsonify(user_info)
-
 
 @app.route('/diary/api/v1/entries', methods=['POST'])
 
