@@ -33,8 +33,18 @@ def view_one_entry(entry_id):
         abort(404)
     return jsonify({'entry': entry[0]})
 
+@app.route('/diary/api/v1/entries/<int:entry_id>', methods=['PUT'])
+def modify_entry(entry_id):
+    entry = [entry for entry in entries if entry['id'] == entry_id]
+    if not request.json:
+        abort(404)
+    entry[0]['title'] = request.json.get('title', entry[0]['title'])
+    entry[0]['content'] = request.json.get('content', entry[0]['content'])
+    return jsonify({'entry': entry[0]})
+
 @app.route('/diary/api/v1/entries/<int:entry_id>', methods=['DELETE'])
 def delete_entry(entry_id):
+    """This is a function for deleting an entry"""
     entry = [entry for entry in entries if entry['id'] == entry_id]
     if len(entry) == 0:
         return jsonify({'message' : "No entry found"})
