@@ -7,6 +7,10 @@ entries = [{'id' : 1, 'title' : u'this is one', 'content' : u'this is content'},
            {'id' : 1, 'title' : u'this is two', 'content' : u'this is content'}]
 user_info = {}
 
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({'message': 'Welcome to mydiary'})
+
 @app.route('/diary/api/v1/register', methods=['POST'])
 def register():
     """This is a function for registering a user"""
