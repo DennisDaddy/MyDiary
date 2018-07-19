@@ -1,5 +1,7 @@
 import unittest
-from app import *
+import os
+
+
 
 import json
 
