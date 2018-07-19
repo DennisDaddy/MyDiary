@@ -21,7 +21,7 @@ def login_required(f):
 
 
 @app.route('/', methods=['GET'])     
-def home():
+def index():
     return jsonify({'message': 'Welcome to mydiary'})
 
 @app.route('/diary/api/v1/register', methods=['POST'])
