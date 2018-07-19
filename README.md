@@ -1,5 +1,9 @@
 # MyDiary
 [![Build Status](https://travis-ci.com/DennisDaddy/MyDiary.svg?branch=master)](https://travis-ci.com/DennisDaddy/MyDiary)
+![AppVeyor tests](https://img.shields.io/appveyor/tests/NZSmartie/coap-net-iu0to.svg)
+
+
+
 MyDiary is an online journal journal where users can pen down their thoughts and feelings.
 
 ## How to use contribute to the project
