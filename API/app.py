@@ -20,7 +20,7 @@ def login_required(f):
     return wrap
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET'])   
 def home():
     return jsonify({'message': 'Welcome to mydiary'})
 
