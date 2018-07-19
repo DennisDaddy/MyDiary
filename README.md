@@ -1,6 +1,8 @@
 # MyDiary
 [![Build Status](https://travis-ci.com/DennisDaddy/MyDiary.svg?branch=data-structures)](https://travis-ci.com/DennisDaddy/MyDiary)
 [![Coverage Status](https://coveralls.io/repos/github/DennisDaddy/MyDiary/badge.svg?branch=data-structures)](https://coveralls.io/github/DennisDaddy/MyDiary?branch=data-structures)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
 
 
 
