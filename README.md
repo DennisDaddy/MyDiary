@@ -1,7 +1,8 @@
 # MyDiary
 [![Build Status](https://travis-ci.com/DennisDaddy/MyDiary.svg?branch=data-structures)](https://travis-ci.com/DennisDaddy/MyDiary)
-![AppVeyor tests](https://travis-ci.com/DennisDaddy/MyDiary)
-[![Coverage Status](https://coveralls.io/repos/github/DennisDaddy/MyDiary/badge.svg?branch=master)](https://coveralls.io/github/DennisDaddy/MyDiary?branch=data-structures)
+[![Coverage Status](https://coveralls.io/repos/github/DennisDaddy/MyDiary/badge.svg?branch=data-structures)](https://coveralls.io/github/DennisDaddy/MyDiary?branch=data-structures)
+
+
 
 
 
