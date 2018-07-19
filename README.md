@@ -1,6 +1,6 @@
 # MyDiary
 [![Build Status](https://travis-ci.com/DennisDaddy/MyDiary.svg?branch=master)](https://travis-ci.com/DennisDaddy/MyDiary)
-![AppVeyor tests](https://img.shields.io/appveyor/tests/NZSmartie/coap-net-iu0to.svg)
+![AppVeyor tests](https://travis-ci.com/DennisDaddy/MyDiary.svg)
 
 
 
