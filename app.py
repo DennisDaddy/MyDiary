@@ -24,7 +24,7 @@ def login_required(f):
 def index():
     return jsonify({'message': 'Welcome to mydiary'})
 
-@app.route('/diary/api/v1/register', methods=['POST'])
+@app.route('/diary/api/v1/auth/register', methods=['POST'])
 def register():
     """This is a function for registering a user"""
     username = request.get_json()["username"]
@@ -34,10 +34,12 @@ def register():
 
     if not username or len(username.strip()) == 0:
         return jsonify({"message": "Username cannot be blank"})
+    elif username in user_info:
+        return jsonify({'message': 'username already exists'})
     elif not email:
         return jsonify({"message": "Email cannot be blank"})
 
-    elif not password:
+    elif not password or len(password.strip()) == 0:
         return jsonify({"message": "Passord cannot be blank"})
     user_info.update({username:{"email": email, "password": password,
                                 "password_confirmation" : password_confirmation}})
@@ -46,7 +48,7 @@ def register():
     return jsonify({'message': "You are successfully registered"})
 
 
-@app.route('/diary/api/v1/login', methods=['POST'])
+@app.route('/diary/api/v1/auth/login', methods=['POST'])
 def login():
     """This is a method for logging in a user"""
     username = request.get_json()["username"]
@@ -81,6 +83,7 @@ def create_entry():
         'content': request.json['content']
     }
     entries.append(entry)
+    
     return jsonify({'entry' : entry})
 
 @app.route('/diary/api/v1/entries', methods=['GET'])
