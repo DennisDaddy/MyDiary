@@ -1,11 +1,24 @@
 """Import python modules"""
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, session
+from functools import wraps
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'SUPER-USER'
 
 entries = [{'id' : 1, 'title' : u'this is one', 'content' : u'this is content'},
            {'id' : 1, 'title' : u'this is two', 'content' : u'this is content'}]
 user_info = {}
+
+# Login required decorator
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            return jsonify({'message': 'You need to login first'})
+    return wrap
+
 
 @app.route('/', methods=['GET'])
 def home():
@@ -19,13 +32,13 @@ def register():
     password = request.get_json()["password"]
     password_confirmation = request.get_json()["password_confirmation"]
 
-    if not username or username == 0:
-        return jsonify({"message": "Username cannot be blank"}), 401
+    if not username or len(username.strip()) == 0:
+        return jsonify({"message": "Username cannot be blank"})
     elif not email:
-        return jsonify({"message": "Email cannot be blank"}), 401
+        return jsonify({"message": "Email cannot be blank"})
 
     elif not password:
-        return jsonify({"message": "Passord cannot be blank"}), 401
+        return jsonify({"message": "Passord cannot be blank"})
     user_info.update({username:{"email": email, "password": password,
                                 "password_confirmation" : password_confirmation}})
     if username in user_info:
@@ -40,7 +53,11 @@ def login():
     password = request.get_json()["password"]
     if username in user_info:
         if password == user_info[username]["password"]:
+            session['logged_in'] = True            
             return jsonify({"message": "You are successfully logged in"})
+        else:
+            return jsonify({"message": "create account first"})
+
     return jsonify({"message": "You are successfully logged in"})
 
 @app.route('/diary/api/v1/account', methods=['GET'])
@@ -48,12 +65,16 @@ def get_user_details():
     """This function retrieves user info"""
     return jsonify(user_info)
 
-@app.route('/diary/api/v1/entries', methods=['POST'])
+@app.route('/logout', methods=['DELETE'])
+def logout():
+    session.pop('logged_in', None)
+    return jsonify({'message': 'you are successfully logged out'})
 
+@app.route('/diary/api/v1/entries', methods=['POST'])
 def create_entry():
     """ This is a funtion for creating an entry"""
     if not request.json or not 'title' in request.json:
-        abort(400)
+        return jsonify({"message": "Enter the right title"})
     entry = {
         'id' : entries[-1]['id'] + 1,
         'title': request.json['title'],
@@ -71,16 +92,16 @@ def get_entries():
 def view_one_entry(entry_id):
     """This is a function for getting a single entry"""
     entry = [entry for entry in entries if entry['id'] == entry_id]
-    if entry == 0:
-        abort(404)
+    if len(entry) == 0:
+        return jsonify({"message": "no entry found"})
     return jsonify({'entry': entry[0]})
 
 @app.route('/diary/api/v1/entries/<int:entry_id>', methods=['PUT'])
 def modify_entry(entry_id):
     """This is a function for modifying an entry"""
     entry = [entry for entry in entries if entry['id'] == entry_id]
-    if entry == 0:
-        abort(404)
+    if len(entry) == 0:
+        return jsonify({"message": "no entry found"})
     entry[0]['title'] = request.json.get('title', entry[0]['title'])
     entry[0]['content'] = request.json.get('content', entry[0]['content'])
     return jsonify({'entry': entry[0]})
@@ -89,7 +110,7 @@ def modify_entry(entry_id):
 def delete_entry(entry_id):
     """This is a function for deleting an entry"""
     entry = [entry for entry in entries if entry['id'] == entry_id]
-    if entry == 0:
+    if len(entry) == 0:
         return jsonify({'message' : "No entry found"})
     entries.remove(entry[0])
     return jsonify({'result': True})
