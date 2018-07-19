@@ -3,21 +3,11 @@ from flask import Flask, jsonify, request, abort, session
 from functools import wraps
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'SUPER-USER'
+app.config['SECRET_KEY'] = '\x996\no\xa52\x19Fp\x9c\x97\xf6\x9fz\x08\x0b\x80l\xde\xf8\xd7\xc1\t\x03'
 
 entries = [{'id' : 1, 'title' : u'this is one', 'content' : u'this is content'},
            {'id' : 1, 'title' : u'this is two', 'content' : u'this is content'}]
 user_info = {}
-
-# Login required decorator
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'logged_in' in session:
-            return f(*args, **kwargs)
-        else:
-            return jsonify({'message': 'You need to login first'})
-    return wrap
 
 
 @app.route('/', methods=['GET'])     
