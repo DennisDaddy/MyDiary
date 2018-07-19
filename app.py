@@ -26,15 +26,12 @@ def register():
         return jsonify({"message": "Username cannot be blank"})
     elif username in user_info:
         return jsonify({'message': 'username already exists'})
-    elif not email:
-        return jsonify({"message": "Email cannot be blank"})
-
-    elif not password or len(password.strip()) == 0:
-        return jsonify({"message": "Passord cannot be blank"})
+    
     user_info.update({username:{"email": email, "password": password,
                                 "password_confirmation" : password_confirmation}})
     if username in user_info:
-        return jsonify({'message': "You are successfully registered"})
+        return jsonify({'message': "You are successfully registered you can continue"})
+        
     return jsonify({'message': "You are successfully registered"})
 
 
