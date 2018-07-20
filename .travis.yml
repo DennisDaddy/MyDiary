@@ -9,9 +9,13 @@ python:
 
 install:
   - pip install r requirements.txt
+  - pip install python-coveralls
+  - pip install coverage
+  - pip install nose
 script:
   - python tests.py
   - python -m pytest --cov-report term-missing --cov=app
+  - python setup.py install
 after_sucess:
   - "coveralls"
 cache: pip
