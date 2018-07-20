@@ -1,6 +1,5 @@
 """Import python modules"""
-from flask import Flask, jsonify, request, abort, session
-from functools import wraps
+from flask import Flask, jsonify, request, session
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '\x996\no\xa52\x19Fp\x9c\x97\xf6\x9fz\x08\x0b\x80l\xde\xf8\xd7\xc1\t\x03'
@@ -10,8 +9,9 @@ entries = [{'id' : 1, 'title' : u'this is one', 'content' : u'this is content'},
 user_info = {}
 
 
-@app.route('/', methods=['GET'])     
+@app.route('/', methods=['GET'])
 def index():
+    """This is a function for root endpoint"""
     return jsonify({'message': 'Welcome to mydiary'})
 
 @app.route('/diary/api/v1/auth/register', methods=['POST'])
@@ -26,14 +26,11 @@ def register():
         return jsonify({"message": "Username cannot be blank"})
     elif username in user_info:
         return jsonify({'message': 'username already exists'})
-    
     user_info.update({username:{"email": email, "password": password,
                                 "password_confirmation" : password_confirmation}})
     if username in user_info:
         return jsonify({'message': "You are successfully registered you can continue"})
-        
     return jsonify({'message': "You are successfully registered"})
-
 
 @app.route('/diary/api/v1/auth/login', methods=['POST'])
 def login():
@@ -42,11 +39,8 @@ def login():
     password = request.get_json()["password"]
     if username in user_info:
         if password == user_info[username]["password"]:
-            session['logged_in'] = True            
-            return jsonify({"message": "You are successfully logged in"})
-        else:
-            return jsonify({"message": "create account first"})
-
+            session['logged_in'] = True
+            return jsonify({"message": "You are logged in now"})
     return jsonify({"message": "You are successfully logged in"})
 
 @app.route('/diary/api/v1/account', methods=['GET'])
@@ -56,6 +50,7 @@ def get_user_details():
 
 @app.route('/logout', methods=['DELETE'])
 def logout():
+    """Function for logging out"""
     session.pop('logged_in', None)
     return jsonify({'message': 'you are successfully logged out'})
 
@@ -70,7 +65,6 @@ def create_entry():
         'content': request.json['content']
     }
     entries.append(entry)
-    
     return jsonify({'entry' : entry})
 
 @app.route('/diary/api/v1/entries', methods=['GET'])
