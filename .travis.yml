@@ -12,6 +12,8 @@ install:
 script:
   - python tests.py
   - python -m pytest --cov-report term-missing --cov=app
+  - service_name: dennis
+  - repo_token: GNUvk8EQr8VVrB6Lx3GltTPUJPoFrv13C 
 after_sucess:
   - "coveralls"
 cache: pip
