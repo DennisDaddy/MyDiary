@@ -37,14 +37,14 @@ class MyDiaryTestCase(unittest.TestCase):
     def test_view_entries(self):
         """"Test listing all entries"""
         with app.test_client(self) as tester:
-            response = tester.get('/diary/api/v1/entries', content_type='application/json')
-            self.assertEqual(response.status_code, 200)
+            
+            self.assertEqual(tester.get('/diary/api/v1/entries', content_type='application/json').status_code, 200)
 
     def test_modify_entry(self):
         """"Test entry modification"""
         tester2 = app.test_client(self)
-        response = tester2.get('/diary/api/v1/entries/1', content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+        response = tester2.post('/diary/api/v1/entries/1',json={})
+        self.assertEqual(response.status_code, 405)
 
     def test_view_entry(self):
         """"Test entry details"""
