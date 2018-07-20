@@ -1,6 +1,6 @@
 """Import python modules"""
 import unittest
-import json
+
 from app import app
 
 
@@ -20,7 +20,6 @@ class MyDiaryTestCase(unittest.TestCase):
             response = toaster.post('/diary/api/v1/auth/register',
                                     json={'username': 'dennis', 'email': 'de@gmail.com',
                                           'password': 'secret', 'password_confirmation': 'secret'})
-            json_data = response.get_json()
             self.assertEqual(response.status_code, 200)
     def test_create_entry(self):
         """Test entry creation"""
@@ -52,14 +51,13 @@ class MyDiaryTestCase(unittest.TestCase):
         tester = app.test_client(self)
         response = tester.get('/diary/api/v1/entries/1', content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        json_data = json.loads(response.data)
 
     def test_login(self):
         """"Test logging in"""
         tester1 = app.test_client(self)
         response = tester1.post('/diary/api/v1/auth/login',
                                 json={'username' : 'dennis', 'password': 'secret'})
-        json_data = response.get_json()
+
         self.assertEqual(response.status_code, 200)
 
     def test_logout(self):

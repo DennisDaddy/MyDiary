@@ -73,6 +73,8 @@ def get_entries():
 def view_one_entry(entry_id):
     """This is a function for getting a single entry"""
     entry = [entry for entry in entries if entry['id'] == entry_id]
+    if len(entry) == 0:
+        return jsonify({"message": "no entry found"})
     return jsonify({'entry': entry[0]})
 
 @app.route('/diary/api/v1/entries/<int:entry_id>', methods=['PUT'])
