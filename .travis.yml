@@ -14,7 +14,7 @@ install:
   - pip install nose
 script:
   - python tests.py
-  - python -m pytest --cov-report term-missing --cov=app
+  - coverage run --source=app -m pytest  && coverage report
   - python setup.py install
 after_sucess:
   - "coveralls"
