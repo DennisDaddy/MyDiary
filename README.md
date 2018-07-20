@@ -12,25 +12,29 @@ In this part the data is stored in data structures(list and dictionary) not data
 
 This API is built on the top of Flask python web framework.
 
+### Heroku link
+ 
+This is the link.. https://madiary.herokuapp.com/
+
 ### Setting up the environment
 
 1. Clone the repository
 
 ```sh
-git clone https://github.com/DennisDaddy/MyDiary.git
+$ git clone https://github.com/DennisDaddy/MyDiary.git
 ```
 
-2. Move to the cloned application directory
+2. Access the cloned application directory
 
 ```sh
-cd MyDiary
+$ cd MyDiary
 ```
 
 
 3. Create the virtual environment and install dependencies(These are required Python, pip and virtual environment):
 
 ```sh
-virtualenv venv
+$ virtualenv venv
 ```
 
 4. Activate the virtual environment [Linux]
@@ -43,23 +47,23 @@ $ source  venv/bin/activate
 5. Install dependencies using pip
 
 ```sh
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 
 
-### How to run the application
+### Running the API
 
 To run the tests, use `nosetests` or any other test runner of your choice with the name of the test file at the end.
 
 ```sh
-nosetests -v
+$ nosetests -v
 ```
 
 Then run the app
 
 ```sh
-python app.py
+$ python app.py
 ```
 
 ### API Endpoints
