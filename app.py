@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '\x996\no\xa52\x19Fp\x9c\x97\xf6\x9fz\x08\x0b\x80l\xde\xf8\xd7\xc1\t\x03'
 
 entries = [{'id' : 1, 'title' : u'this is one', 'content' : u'this is content'},
-           {'id' : 1, 'title' : u'this is two', 'content' : u'this is content'}]
+           {'id' : 2, 'title' : u'this is two', 'content' : u'this is content'}]
 user_info = {}
 
 
@@ -22,16 +22,13 @@ def register():
     password = request.get_json()["password"]
     password_confirmation = request.get_json()["password_confirmation"]
 
-    if not username or len(username.strip()) == 0:
-        return jsonify({"message": "Username cannot be blank"})
-    elif username in user_info:
+
+    if username in user_info:
         return jsonify({'message': 'username already exists'})
+
     user_info.update({username:{"email": email, "password": password,
                                 "password_confirmation" : password_confirmation}})
-    if username in user_info:
-        return jsonify({'message': "You are successfully registered you can continue"})
     return jsonify({'message': "You are successfully registered"})
-
 @app.route('/diary/api/v1/auth/login', methods=['POST'])
 def login():
     """This is a method for logging in a user"""
@@ -41,7 +38,7 @@ def login():
         if password == user_info[username]["password"]:
             session['logged_in'] = True
             return jsonify({"message": "You are logged in now"})
-    return jsonify({"message": "You are successfully logged in"})
+    return jsonify({"message": "You are not a registered user"})
 
 @app.route('/diary/api/v1/account', methods=['GET'])
 def get_user_details():
@@ -76,16 +73,12 @@ def get_entries():
 def view_one_entry(entry_id):
     """This is a function for getting a single entry"""
     entry = [entry for entry in entries if entry['id'] == entry_id]
-    if len(entry) == 0:
-        return jsonify({"message": "no entry found"})
     return jsonify({'entry': entry[0]})
 
 @app.route('/diary/api/v1/entries/<int:entry_id>', methods=['PUT'])
 def modify_entry(entry_id):
     """This is a function for modifying an entry"""
     entry = [entry for entry in entries if entry['id'] == entry_id]
-    if len(entry) == 0:
-        return jsonify({"message": "no entry found"})
     entry[0]['title'] = request.json.get('title', entry[0]['title'])
     entry[0]['content'] = request.json.get('content', entry[0]['content'])
     return jsonify({'entry': entry[0]})
@@ -94,8 +87,6 @@ def modify_entry(entry_id):
 def delete_entry(entry_id):
     """This is a function for deleting an entry"""
     entry = [entry for entry in entries if entry['id'] == entry_id]
-    if len(entry) == 0:
-        return jsonify({'message' : "No entry found"})
     entries.remove(entry[0])
     return jsonify({'result': True})
 
