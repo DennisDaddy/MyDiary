@@ -4,18 +4,15 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/07809922afad3a74f442/maintainability)](https://codeclimate.com/github/DennisDaddy/MyDiary/maintainability)
 
 
+MyDiary is an online journal where users can pen down their thoughts and feelings.
 
+## How to use or contribute to the project
+Follow the steps below if you're interested in contributing or using this API.
+In this part the data is stored in data structures(list and dictionary) not databases.
 
+This API is built on the top of Flask python web framework.
 
-MyDiary is an online journal journal where users can pen down their thoughts and feelings.
-
-## How to use contribute to the project
-Follow the steps below if you're interested in contributing or using this api.
-In this part the data is stored in data structures(list and dictionery) not databases.
-
-### Setting the environment
-
-This platform API is built on the top of Flask python web framework.
+### Setting up the environment
 
 1. Clone the repository
 
@@ -23,29 +20,27 @@ This platform API is built on the top of Flask python web framework.
 git clone https://github.com/DennisDaddy/MyDiary.git
 ```
 
-2. Create the virtual environment and install dependencies(These are required Python, pip and virtual environment):
+2. Move to the cloned application directory
 
 ```sh
 cd MyDiary
 ```
 
+
+3. Create the virtual environment and install dependencies(These are required Python, pip and virtual environment):
+
 ```sh
 virtualenv venv
 ```
 
- Activate the virtual environment [Linux]
+4. Activate the virtual environment [Linux]
 
 ```sh
 $ source  venv/bin/activate
 ```
 
-Activate the virtual environment [Windows]
 
-```sh
-cd env/Scripts && activate && cd ../..
-```
-
-3. Install dependencies using pip
+5. Install dependencies using pip
 
 ```sh
 pip install -r requirements.txt
@@ -69,7 +64,7 @@ python app.py
 
 ### API Endpoints
 
-**`GET /`** *Get Home page*
+**`GET /`** *Home page*
 
 **`POST /diary/api/v1/auth/register`** *User registration*
 
