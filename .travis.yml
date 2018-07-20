@@ -14,8 +14,11 @@ install:
   - pip install nose
 script:
   - python tests.py
-  - coverage run --source=app -m pytest  && coverage report
-  - python setup.py install
+  - nosetests --exe -v
+  - nosetests --exe --with-coverage --cover-package=app
+  - coveralls
+  - codecov
 after_sucess:
   - "coveralls"
+  - "codecov"
 cache: pip
