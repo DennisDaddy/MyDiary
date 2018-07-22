@@ -39,11 +39,30 @@ def create_entry():
     
     finally:
         conn.commit()
-        conn.close()
+        
 
     return jsonify({'message': 'Entry successfully created!'})
 
-
+@app.route('/diary/api/v1/entries', methods=['GET'])
+def get_all_entries():    
+    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    cur = conn.cursor()
+    my_list = []
+    try:
+        cur.execute("SELECT * from entries")
+        rows = cur.fetchall()     
+        
+        for row in rows:
+            my_list.append(row[0])
+            my_list.append(row[1])
+            my_list.append(row[2])
+            
+    except:
+        return jsonify({'message':'Cant retrieve entries'})
+    
+    finally:
+         conn.close()
+    return jsonify(my_list)
 
 
 if __name__ == '__main__':
