@@ -80,6 +80,28 @@ def view_entry(entry_id):
     
     finally:
          conn.close()
+
+
+@app.route('/diary/api/v1/entries/<int:entry_id>', methods=['DELETE'])
+def delete_entry(entry_id):
+    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    cur = conn.cursor()
+    rows_deleted = 0
+   
+    try:
+        cur.execute("DELETE from entries WHERE entry_id = entry.id")
+        
+        rows_deleted = cur.rowcount
+        conn.commit()
+       
+    except:
+        return jsonify({'message':'Cant retrieve entry'})
+    
+    finally:
+        
+        conn.close()
+        return jsonify(rows_deleted)
+         
        
 
 
