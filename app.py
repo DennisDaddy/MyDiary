@@ -50,8 +50,7 @@ def get_all_entries():
     my_list = []
     try:
         cur.execute("SELECT * from entries")
-        rows = cur.fetchall()     
-        
+        rows = cur.fetchall()        
         for row in rows:
             my_list.append(row[0])
             my_list.append(row[1])
@@ -63,6 +62,26 @@ def get_all_entries():
     finally:
          conn.close()
     return jsonify(my_list)
+
+@app.route('/diary/api/v1/entries/<int:entry_id>', methods=['GET'])
+def view_entry(entry_id):
+    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    cur = conn.cursor()
+   
+    try:
+        cur.execute("SELECT * from entries")
+        rows = cur.fetchall()
+        for row in rows:
+            return jsonify({row[0]: row[1]})
+                  
+            
+    except:
+        return jsonify({'message':'Cant retrieve entries'})
+    
+    finally:
+         conn.close()
+       
+
 
 
 if __name__ == '__main__':
