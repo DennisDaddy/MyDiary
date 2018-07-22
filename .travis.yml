@@ -13,7 +13,7 @@ install:
 script:
   - python tests.py
   - nosetests --exe -v
-  - nosetests --exe --with-coverage --cover-package=app
+  - nosetests --exe --with-coverage 
   - coveralls
   - codecov
 after_sucess:
