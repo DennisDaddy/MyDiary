@@ -2,6 +2,7 @@
 # Created by https://www.gitignore.io/api/python
 
 ### Python ###
+.vscode/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
