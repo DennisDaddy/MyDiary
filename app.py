@@ -23,6 +23,22 @@ conn.commit()
 @app.route('/')
 def home():
     return jsonify({'message': 'Welcome to MyDiary'})
+@app.route('/diary/api/v1/auth/register', methods=['POST'])
+def register():
+    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    cur = conn.cursor()
+    username = request.get_json()['username']
+    email = request.get_json()['email']
+    password = request.get_json()['password']
+    password_confirmation = request.get_json()['password_confirmation']
+
+    try:
+        cur.execute("INSERT INTO entries (title, content) VALUES('"+title+"', '"+content+"');")
+    except:
+        return jsonify({'message': 'Try again'})
+    finally:
+        conn.commit()
+    return jsonify({'message': 'successfully created'})
 
 @app.route('/diary/api/v1/entries', methods=['POST'])
 def create_entry():
@@ -38,8 +54,7 @@ def create_entry():
         return jsonify({'message': 'Not successfully try again!'})
     
     finally:
-        conn.commit()
-        
+        conn.commit()     
 
     return jsonify({'message': 'Entry successfully created!'})
 
@@ -69,10 +84,12 @@ def view_entry(entry_id):
     cur = conn.cursor()
    
     try:
-        cur.execute("SELECT * from entries")
+        
+        cur.execute("SELECT * FROM entries WHERE ID = %s", (entry_id,))
         rows = cur.fetchall()
         for row in rows:
             return jsonify({row[0]: row[1]})
+           
                   
             
     except:
@@ -86,21 +103,19 @@ def view_entry(entry_id):
 def delete_entry(entry_id):
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     cur = conn.cursor()
-    rows_deleted = 0
-   
-    try:
-        cur.execute("DELETE from entries WHERE entry_id = entry.id")
-        
-        rows_deleted = cur.rowcount
+    
+    try:       
+       
+        cur.execute("DELETE FROM entries WHERE ID = %s", (entry_id,))
         conn.commit()
+       
        
     except:
         return jsonify({'message':'Cant retrieve entry'})
     
-    finally:
-        
+    finally:        
         conn.close()
-        return jsonify(rows_deleted)
+        return jsonify({'message': 'successfully deleted'})
          
        
 
