@@ -9,9 +9,11 @@ python:
 
 install:
   - pip install r requirements.txt
+  - pip install pytest-cov
+  - pip install coveralls
   
 script:
-  - python tests.py
+ 
   - nosetests --exe -v
   - nosetests --exe --with-coverage 
   - coveralls
@@ -19,3 +21,4 @@ script:
 after_sucess:
   - "coveralls"
   - "codecov"
+cache: pip
