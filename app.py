@@ -2,9 +2,16 @@
 from flask import Flask, jsonify, json, request
 import psycopg2
 import datetime
+import jwt
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 
 
 app = Flask(__name__)
+app .config['JWT_SECRET_KEY'] = '5c750c0e72ce5394dfe7720fa26d0327d616ff9ff869be19'
+jwt = JWTManager(app)
 
 #Connect using psycopg
 conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
@@ -28,13 +35,9 @@ cur.execute('''CREATE TABLE IF NOT EXISTS users(
     password_confirmation varchar (100) NOT NULL,
     timestamp timestamp default current_timestamp 
 );''')
-
-
 conn.commit()
 
-@app.route('/')
-def home():
-    return jsonify({'message': 'Welcome to MyDiary'})
+
 @app.route('/api/v1/auth/register', methods=['POST'])
 def register():
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
@@ -49,8 +52,8 @@ def register():
     except:
         return jsonify({'message': 'Try again'})
     finally:
-        conn.commit()
-    return jsonify({'message': 'successfully created'})
+        conn.commit()    
+   
 
 @app.route('/api/v1/auth/login', methods=['POST'])
 def login():
@@ -71,12 +74,14 @@ def login():
         return jsonify({'message': 'Try again'})
     finally:
         conn.commit()
-        return jsonify(user_info)
-   
+        access_token = create_access_token(identity=username)
+        return jsonify(access_token=access_token)  
 
 
 @app.route('/api/v1/entries', methods=['POST'])
+@jwt_required
 def create_entry():
+    
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     cur = conn.cursor()
     title = request.get_json()['title']
@@ -114,6 +119,7 @@ def get_all_entries():
     return jsonify(my_list)
 
 @app.route('/api/v1/entries/<int:entry_id>', methods=['GET'])
+@jwt_required
 def view_entry(entry_id):
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     cur = conn.cursor()
