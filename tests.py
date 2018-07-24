@@ -35,14 +35,22 @@ class MyDiaryTestCase(unittest.TestCase):
         
     
     def test_view_all_entries(self):
-        tester = app.test_client(self)
-        response = tester.get('/api/v1/entries/', content_type='aplication/json')
+        tester = app.test_client().post('/api/v1/entries', data=self.entry)
+        self.assertEqual(tester.status_code, 201)
+        tester = tester.client().get('/api/v1/entrie')
+        self.assertEqual(tester.status_code, 200)
+        self.assertIn('This is', str(tester.data))
         
     
     def test_delete_entry(self):
-        tester = app.test_client(self)
-        response = tester.get('/', content_type='aplication/json')
-        
+        tester = app.test_client().post('/api/v1/entries/1', data=self.entry)
+        self.assertEqual(tester.status_code, 201)
+        result_in_json = json.loads(tester.data.decode('utf-8').replace("'", "\""))
+        result = tester.client().get(
+            '/api/v1/entries/{}'.format(result_in_json['id'])
+        )
+        self.assertEqual(result.status_code, 200)
+        self.assertIn('This is', str(tester.data))
 
 
 
