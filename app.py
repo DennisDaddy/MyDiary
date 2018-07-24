@@ -18,12 +18,24 @@ cur.execute('''CREATE TABLE IF NOT EXISTS entries(
     content varchar (100) NOT NULL,
     timestamp timestamp default current_timestamp 
 );''')
+
+
+cur.execute('''CREATE TABLE IF NOT EXISTS users(
+    id serial PRIMARY KEY,
+    username varchar (50) NOT NULL,
+    email varchar (100) NOT NULL,
+    password varchar (100) NOT NULL,
+    password_confirmation varchar (100) NOT NULL,
+    timestamp timestamp default current_timestamp 
+);''')
+
+
 conn.commit()
 
 @app.route('/')
 def home():
     return jsonify({'message': 'Welcome to MyDiary'})
-@app.route('/diary/api/v1/auth/register', methods=['POST'])
+@app.route('/api/v1/auth/register', methods=['POST'])
 def register():
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     cur = conn.cursor()
@@ -33,19 +45,42 @@ def register():
     password_confirmation = request.get_json()['password_confirmation']
 
     try:
-        cur.execute("INSERT INTO entries (title, content) VALUES('"+title+"', '"+content+"');")
+        cur.execute("INSERT INTO users (username, email, password, password_confirmation) VALUES('"+username+"', '"+email+"', '"+password+"', '"+password_confirmation+"');")
     except:
         return jsonify({'message': 'Try again'})
     finally:
         conn.commit()
     return jsonify({'message': 'successfully created'})
 
-@app.route('/diary/api/v1/entries', methods=['POST'])
+@app.route('/api/v1/auth/login', methods=['POST'])
+def login():
+    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    cur = conn.cursor()
+    username = request.get_json()['username']
+    password = request.get_json()['password']
+    user_info = []
+    
+    try:
+        cur.execute("SELECT * FROM users WHERE username LIKE '"+username+"' AND password LIKE '"+password+"'")
+        rows = cur.fetchall()
+        for row in rows:
+            user_info.append(row[0])
+            user_info.append(row[1])
+            
+    except:
+        return jsonify({'message': 'Try again'})
+    finally:
+        conn.commit()
+        return jsonify(user_info)
+   
+
+
+@app.route('/api/v1/entries', methods=['POST'])
 def create_entry():
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     cur = conn.cursor()
     title = request.get_json()['title']
-    content = request.get_json()['content']    
+    content = request.get_json()['content']
 
     try:
         cur.execute("INSERT INTO entries (title, content) VALUES('"+title+"', '"+content+"');")
@@ -58,7 +93,7 @@ def create_entry():
 
     return jsonify({'message': 'Entry successfully created!'})
 
-@app.route('/diary/api/v1/entries', methods=['GET'])
+@app.route('/api/v1/entries', methods=['GET'])
 def get_all_entries():    
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     cur = conn.cursor()
@@ -78,7 +113,7 @@ def get_all_entries():
          conn.close()
     return jsonify(my_list)
 
-@app.route('/diary/api/v1/entries/<int:entry_id>', methods=['GET'])
+@app.route('/api/v1/entries/<int:entry_id>', methods=['GET'])
 def view_entry(entry_id):
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     cur = conn.cursor()
@@ -99,7 +134,7 @@ def view_entry(entry_id):
          conn.close()
 
 
-@app.route('/diary/api/v1/entries/<int:entry_id>', methods=['DELETE'])
+@app.route('/api/v1/entries/<int:entry_id>', methods=['DELETE'])
 def delete_entry(entry_id):
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     cur = conn.cursor()
