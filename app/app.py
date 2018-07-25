@@ -1,16 +1,14 @@
 """Import flask modules"""
 from flask import Flask, jsonify, request
-import psycopg2
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token
 )
+from app.models import *
 
 
 app = Flask(__name__)
 app .config['JWT_SECRET_KEY'] = '5c750c0e72ce5394dfe7720fa26d0327d616ff9ff869be19'
 jwt = JWTManager(app)
-
-from app.models import *
 
 
 @app.route('/api/v1/auth/register', methods=['POST'])
@@ -40,21 +38,15 @@ def login():
     username = request.get_json()['username']
     password = request.get_json()['password']
     #user_info = []
-
-    
     cur.execute("SELECT * FROM users WHERE username LIKE '"+username+"'\
          AND password LIKE '"+password+"'")
     rows = cur.fetchone()
     if rows is None:
         return jsonify({'message': 'Not successful  you can try again'})
     else:
-        access_token = create_access_token(identity=username) 
-        #return jsonify({'message': 'LOGIN'})
+        access_token = create_access_token(identity=username)
         return jsonify(access_token=access_token)
     conn.commit()
-        
- 
-
 
 @app.route('/api/v1/entries', methods=['POST'])
 @jwt_required
@@ -67,14 +59,14 @@ def create_entry():
 
     try:
         cur.execute("INSERT INTO entries (title, content) VALUES('"+title+"', '"+content+"');")
+        return jsonify({'message': 'Not successfully try again!'})
 
     except:
         return jsonify({'message': 'Not successfully try again!'})
 
     finally:
         conn.commit()
-
-    return jsonify({'message': 'Entry successfully created!'})
+    return jsonify({'message': 'Entry successfully created!'}), 201
 
 @app.route('/api/v1/entries', methods=['GET'])
 @jwt_required
@@ -105,21 +97,19 @@ def modify_entry(entry_id):
     """This is a function for viewing single entry"""
     #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     #cur = conn.cursor()
+    cur.execute("SELECT * FROM entries WHERE ID = %s", (entry_id,))
+    entry = cur.fetchone()
     title = request.get_json()['title']
     content = request.get_json()['content']
-    cur.execute("SELECT * FROM entries WHERE ID = %s", (entry_id,))
-
-    try:
+    
+    if entry is not None:
         cur.execute("UPDATE entries SET title=%s, content=%s WHERE id=%s",\
-         (title, content, entry_id))
+        (title, content, entry_id))    
         conn.commit()
-        return jsonify({'message': 'Entry successfully updated'})
-
-    except:
-        return jsonify({'message': 'Not  updated'})
-    conn.close()
-
-
+        return jsonify({'message': 'Entry successfully updated'}), 201
+    else:
+        return jsonify({'message': 'Not complete no entry'})
+  
 
 @app.route('/api/v1/entries/<int:entry_id>', methods=['GET'])
 def view_entry(entry_id):
@@ -152,7 +142,7 @@ def delete_entry(entry_id):
 
     finally:
         conn.close()
-    return jsonify({'message': 'successfully deleted'})
+    return jsonify({'message': 'successfully deleted'}), 204
 
 if __name__ == '__main__':
     app.run(debug=True)

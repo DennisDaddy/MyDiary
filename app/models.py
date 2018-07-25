@@ -1,3 +1,4 @@
+"""Import flask modules"""
 import psycopg2
 
 #Connect using psycopg
