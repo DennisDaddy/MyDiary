@@ -117,22 +117,39 @@ def get_all_entries():
         conn.close()
     return jsonify(my_list)
 
+@app.route('/api/v1/entries/<int:entry_id>', methods=['PUT'])
+def modify_entry(entry_id):
+    """This is a function for viewing single entry"""
+    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    cur = conn.cursor()
+    title = request.get_json()['title']
+    content = request.get_json()['content']
+    cur.execute("SELECT * FROM entries WHERE ID = %s", (entry_id,))
+    
+    try:
+        cur.execute("UPDATE entries SET title=%s, content=%s WHERE id=%s", (title, content, id))
+        conn.commit()
+        return jsonify({'message': 'successfully update'})
+
+    except:
+        return jsonify({'message': 'Not  updated'})
+    conn.close()   
+
+
+
 @app.route('/api/v1/entries/<int:entry_id>', methods=['GET'])
-@jwt_required
 def view_entry(entry_id):
     """This is a function for viewing single entry"""
     conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
     cur = conn.cursor()
-    try:
-        cur.execute("SELECT * FROM entries WHERE ID = %s", (entry_id,))
-        rows = cur.fetchall()
-        for row in rows:
-            return jsonify({row[0]: row[1]})
-    except:
-        return jsonify({'message':'Cant retrieve entries'})
-
-    finally:
-        conn.close()
+    
+    cur.execute("SELECT * FROM entries WHERE ID = %s", (entry_id,))
+    rows = cur.fetchall()
+    output={}
+    for row in rows:
+        output.update({row[0]: row[1]})
+    conn.close()
+    return jsonify(output)
 
 
 @app.route('/api/v1/entries/<int:entry_id>', methods=['DELETE'])
