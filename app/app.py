@@ -9,29 +9,8 @@ from flask_jwt_extended import (
 app = Flask(__name__)
 app .config['JWT_SECRET_KEY'] = '5c750c0e72ce5394dfe7720fa26d0327d616ff9ff869be19'
 jwt = JWTManager(app)
-#Connect using psycopg
-conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
-#Activate connection cursor
-cur = conn.cursor()
 
-# Create tables
-cur.execute('''CREATE TABLE IF NOT EXISTS entries(
-    id serial PRIMARY KEY,
-    title varchar (50) NOT NULL,
-    content varchar (100) NOT NULL,
-    timestamp timestamp default current_timestamp 
-);''')
-
-
-cur.execute('''CREATE TABLE IF NOT EXISTS users(
-    id serial PRIMARY KEY,
-    username varchar (50) NOT NULL,
-    email varchar (100) NOT NULL,
-    password varchar (100) NOT NULL,
-    password_confirmation varchar (100) NOT NULL,
-    timestamp timestamp default current_timestamp 
-);''')
-conn.commit()
+from app.models import *
 
 
 @app.route('/api/v1/auth/register', methods=['POST'])
@@ -60,23 +39,21 @@ def login():
     #cur = conn.cursor()
     username = request.get_json()['username']
     password = request.get_json()['password']
-    user_info = []
+    #user_info = []
 
-    try:
-        cur.execute("SELECT * FROM users WHERE username LIKE '"+username+"'\
+    
+    cur.execute("SELECT * FROM users WHERE username LIKE '"+username+"'\
          AND password LIKE '"+password+"'")
-        rows = cur.fetchall()
-        for row in rows:
-            user_info.append(row[0])
-            user_info.append(row[1])
-
-    except:
-        return jsonify({'message': 'Try again'})
-    finally:
-        conn.commit()
-        access_token = create_access_token(identity=username)
+    rows = cur.fetchone()
+    if rows is None:
+        return jsonify({'message': 'Not successful  you can try again'})
+    else:
+        access_token = create_access_token(identity=username) 
+        #return jsonify({'message': 'LOGIN'})
         return jsonify(access_token=access_token)
-    return jsonify({'message': 'You are successfully logged in!'})    
+    conn.commit()
+        
+ 
 
 
 @app.route('/api/v1/entries', methods=['POST'])
@@ -100,6 +77,7 @@ def create_entry():
     return jsonify({'message': 'Entry successfully created!'})
 
 @app.route('/api/v1/entries', methods=['GET'])
+@jwt_required
 def get_all_entries():
     """This is a function for getting all entries"""
     #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
@@ -121,6 +99,8 @@ def get_all_entries():
     return jsonify(my_list)
 
 @app.route('/api/v1/entries/<int:entry_id>', methods=['PUT'])
+@jwt_required
+
 def modify_entry(entry_id):
     """This is a function for viewing single entry"""
     #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
@@ -157,6 +137,7 @@ def view_entry(entry_id):
 
 
 @app.route('/api/v1/entries/<int:entry_id>', methods=['DELETE'])
+@jwt_required
 def delete_entry(entry_id):
     """This is a function for deleting an entry"""
     #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
