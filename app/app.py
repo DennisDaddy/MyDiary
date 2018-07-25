@@ -37,8 +37,8 @@ conn.commit()
 @app.route('/api/v1/auth/register', methods=['POST'])
 def register():
     """This is a function for registering a user"""
-    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
-    cur = conn.cursor()
+    #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    #cur = conn.cursor()
     username = request.get_json()['username']
     email = request.get_json()['email']
     password = request.get_json()['password']
@@ -51,18 +51,20 @@ def register():
         return jsonify({'message': 'Try again'})
     finally:
         conn.commit()
+    return jsonify({'message': 'You are successfully registered!'})
 
 @app.route('/api/v1/auth/login', methods=['POST'])
 def login():
     """This is a function for user login"""
-    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
-    cur = conn.cursor()
+    #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    #cur = conn.cursor()
     username = request.get_json()['username']
     password = request.get_json()['password']
     user_info = []
 
     try:
-        cur.execute("SELECT * FROM users WHERE username LIKE '"+username+"' AND password LIKE '"+password+"'")
+        cur.execute("SELECT * FROM users WHERE username LIKE '"+username+"'\
+         AND password LIKE '"+password+"'")
         rows = cur.fetchall()
         for row in rows:
             user_info.append(row[0])
@@ -74,14 +76,15 @@ def login():
         conn.commit()
         access_token = create_access_token(identity=username)
         return jsonify(access_token=access_token)
+    return jsonify({'message': 'You are successfully logged in!'})    
 
 
 @app.route('/api/v1/entries', methods=['POST'])
 @jwt_required
 def create_entry():
     """This is a fuction for creating an entry"""
-    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
-    cur = conn.cursor()
+    #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    #cur = conn.cursor()
     title = request.get_json()['title']
     content = request.get_json()['content']
 
@@ -99,8 +102,8 @@ def create_entry():
 @app.route('/api/v1/entries', methods=['GET'])
 def get_all_entries():
     """This is a function for getting all entries"""
-    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
-    cur = conn.cursor()
+    #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    #cur = conn.cursor()
     my_list = []
     try:
         cur.execute("SELECT * from entries")
@@ -120,32 +123,33 @@ def get_all_entries():
 @app.route('/api/v1/entries/<int:entry_id>', methods=['PUT'])
 def modify_entry(entry_id):
     """This is a function for viewing single entry"""
-    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
-    cur = conn.cursor()
+    #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    #cur = conn.cursor()
     title = request.get_json()['title']
     content = request.get_json()['content']
     cur.execute("SELECT * FROM entries WHERE ID = %s", (entry_id,))
-    
+
     try:
-        cur.execute("UPDATE entries SET title=%s, content=%s WHERE id=%s", (title, content, id))
+        cur.execute("UPDATE entries SET title=%s, content=%s WHERE id=%s",\
+         (title, content, entry_id))
         conn.commit()
-        return jsonify({'message': 'successfully update'})
+        return jsonify({'message': 'Entry successfully updated'})
 
     except:
         return jsonify({'message': 'Not  updated'})
-    conn.close()   
+    conn.close()
 
 
 
 @app.route('/api/v1/entries/<int:entry_id>', methods=['GET'])
 def view_entry(entry_id):
     """This is a function for viewing single entry"""
-    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
-    cur = conn.cursor()
-    
+    #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    #cur = conn.cursor()
+
     cur.execute("SELECT * FROM entries WHERE ID = %s", (entry_id,))
     rows = cur.fetchall()
-    output={}
+    output = {}
     for row in rows:
         output.update({row[0]: row[1]})
     conn.close()
@@ -155,8 +159,8 @@ def view_entry(entry_id):
 @app.route('/api/v1/entries/<int:entry_id>', methods=['DELETE'])
 def delete_entry(entry_id):
     """This is a function for deleting an entry"""
-    conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
-    cur = conn.cursor()
+    #conn = psycopg2.connect("dbname=diary user=postgres password=123456 host=localhost")
+    #cur = conn.cursor()
 
     try:
         cur.execute("DELETE FROM entries WHERE ID = %s", (entry_id,))
