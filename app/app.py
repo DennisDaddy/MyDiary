@@ -10,6 +10,11 @@ app = Flask(__name__)
 app .config['JWT_SECRET_KEY'] = '5c750c0e72ce5394dfe7720fa26d0327d616ff9ff869be19'
 jwt = JWTManager(app)
 
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify("Welcome to mydiary")
+   
+
 
 @app.route('/api/v1/auth/register', methods=['POST'])
 def register():
