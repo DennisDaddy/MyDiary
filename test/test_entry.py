@@ -1,5 +1,6 @@
 import unittest
-import os
+import os, sys
+sys.path.insert(0, os.path.abspath("."))
 from app.app import *
 
 class MyDiaryTestCase(unittest.TestCase):  
