@@ -2,7 +2,20 @@ import unittest
 import os
 from app.app import *
 
-class MyDiaryTestCase(unittest.TestCase):      
+class MyDiaryTestCase(unittest.TestCase):
+
+     def setUp(self):
+        """Initialize test variables"""
+        self.app = create_app(config_name="testing")
+        self.client = self.app.test_client()
+        self.entry = {
+            'username': "dennis",
+            'email': "dennis@gmail.com",
+            'password': "123456",
+            'password_confirmation': "123456"
+
+        }
+
 
     def tes_user_register_entry(self):
         tester = app.test_client(self)
