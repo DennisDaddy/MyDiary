@@ -1,5 +1,5 @@
 # MyDiary
-[![Build Status](https://travis-ci.com/DennisDaddy/MyDiary.svg?branch=master)](https://travis-ci.com/DennisDaddy/MyDiary)
+[![Build Status](https://travis-ci.com/DennisDaddy/MyDiary.svg?branch=challenge3)](https://travis-ci.com/DennisDaddy/MyDiary)
 
 
 MyDiary is an online journal where users can pen down their thoughts and feelings.
