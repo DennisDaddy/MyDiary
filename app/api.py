@@ -13,6 +13,12 @@ api = Api(app)
 app .config['JWT_SECRET_KEY'] = '5c750c0e72ce5394dfe7720fa26d0327d616ff9ff869be19'
 jwt = JWTManager(app)
 
+class Home(Resource):
+    """This is a class for root endpoint"""
+    def get(self):
+        """This is am method for getting root endpoint using GET request""" 
+        return jsonify({'message': 'Welcome to MyDiary'})
+
 class EntryList(Resource):
     """This is a class for entries endpoints without IDs"""
     def get(self):
@@ -151,7 +157,7 @@ class UserInfo(Resource):
             return jsonify({'message': 'That user is not available'})
         return jsonify(info)
 
-
+api.add_resource(Home, '/')
 api.add_resource(UserRegistration, '/api/v1/auth/register')
 api.add_resource(UserLogin, '/api/v1/auth/login')
 api.add_resource(UserInfo, '/api/v1/users/<int:user_id>')
