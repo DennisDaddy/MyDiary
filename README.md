@@ -9,9 +9,7 @@ All the data is stored in the database, make sure you have installed PostgreSQL 
 
 This API is built on the top of Flask python web framework.
 
-### Heroku link
- 
-This is the link.. https://madiary.herokuapp.com/
+
 
 ### Setting up the environment
 
