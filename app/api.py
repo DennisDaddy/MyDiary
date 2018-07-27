@@ -1,7 +1,7 @@
 """Import flask modules"""
+import datetime
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
-import datetime
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token
 )
@@ -14,7 +14,9 @@ app .config['JWT_SECRET_KEY'] = '5c750c0e72ce5394dfe7720fa26d0327d616ff9ff869be1
 jwt = JWTManager(app)
 
 class EntryList(Resource):
+    """This is a class for entries endpoints without IDs"""
     def get(self):
+        """This is a method for retrieving entries using GET request"""
         my_list = []
         try:
             cur.execute("SELECT * from entries")
@@ -28,33 +30,38 @@ class EntryList(Resource):
         finally:
             conn.close()
         return jsonify(my_list)
-    
+
     def post(self):
+        """This is a method for creating an entry using POST request"""
         title = request.get_json()['title']
         content = request.get_json()['content']
 
         try:
             cur.execute("INSERT INTO entries (title, content) VALUES('"+title+"', '"+content+"');")
-            return jsonify({'message': 'Not successfully try again!'})
-        
+            return jsonify({'message': 'Entry successfully created!'})
+
         except:
             return jsonify({'message': 'Not successfully try again!'})
-        
+
         finally:
             conn.commit()
-        return jsonify({'message': 'Not successfully try again!'})
+        return jsonify({'message': 'Entry successfully created!'})
 
 
 class Entry(Resource):
+    """This is a class for all the entries with IDs"""
     def get(self, id):
+        """ This is a method for getting an entry using GET request"""
+
         cur.execute("SELECT * FROM entries WHERE ID = %s", (id,))
         rows = cur.fetchall()
         output = {}
         for row in rows:
-            output.update({row[0]: row[1]})        
+            output.update({row[0]: row[1]})
         return jsonify(output)
-    
+
     def put(self, id):
+        """This is a method for modifying an entry using PUT request"""
         cur.execute("SELECT * FROM entries WHERE ID = %s", (id,))
         entry = cur.fetchone()
         title = request.get_json()['title']
@@ -71,22 +78,24 @@ class Entry(Resource):
             return jsonify({'message': 'Not complete no entry'})
         conn.commit()
         return jsonify({'message': 'Entry successfully updated'})
- 
-    
+
     def delete(self, id):
+        """This is a method for deleting an entry using DELETE request"""
         try:
             cur.execute("DELETE FROM entries WHERE ID = %s", (id,))
             conn.commit()
         except:
             return jsonify({'message':'Cant retrieve entry'})
-        
+
         finally:
             conn.close()
         return jsonify({'message': 'successfully deleted'})
 
 
 class UserRegistration(Resource):
+    """This is a class for registering a user using POST request"""
     def post(self):
+        """This is a method for registering a user using POST request"""
         username = request.get_json()['username']
         email = request.get_json()['email']
         password = request.get_json()['password']
@@ -103,9 +112,11 @@ class UserRegistration(Resource):
         return jsonify({'message': 'You are successfully registered!'})
 
 
-
 class UserLogin(Resource):
+    """This is a class for logging user in """
+
     def post(self):
+        """ This is a method for logging user using POST request"""
         username = request.get_json()['username']
         password = request.get_json()['password']
 
@@ -114,10 +125,10 @@ class UserLogin(Resource):
         rows = cur.fetchone()
         if rows is None:
             return jsonify({'message': 'Not successful  you can try again'})
-        else:
-            access_token = create_access_token(identity=username)
-            return jsonify(access_token=access_token)
-        conn.commit()
+
+        access_token = create_access_token(identity=username)
+        return jsonify(access_token=access_token)
+    conn.commit()
 
 
 api.add_resource(UserRegistration, '/api/v1/auth/register')
