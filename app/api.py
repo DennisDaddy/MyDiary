@@ -2,16 +2,16 @@
 import datetime
 from flask import Flask, jsonify, request, make_response
 from flask_restful import Resource, Api
-from flask_jwt_extended import (
-    JWTManager, jwt_required, create_access_token
-)
+#from flask_jwt_extended import (
+ #   JWTManager, jwt_required, create_access_token
+#)
 from app.models import *
 
 
 app = Flask(__name__)
 api = Api(app)
 app .config['JWT_SECRET_KEY'] = '5c750c0e72ce5394dfe7720fa26d0327d616ff9ff869be19'
-jwt = JWTManager(app)
+#jwt = JWTManager(app)
 
 class Home(Resource):
     """This is a class for root endpoint"""
@@ -33,11 +33,11 @@ class EntryList(Resource):
                 my_list.append(row[2])
         except:
             return jsonify({'message':'Cant retrieve entries'})
-        finally:
-            conn.close()
+        
         return jsonify(my_list)
-
+#@jwt_required
     def post(self):
+        
         """This is a method for creating an entry using POST request"""
         title = request.get_json()['title']
         content = request.get_json()['content']

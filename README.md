@@ -1,4 +1,5 @@
 # MyDiary
+[![Build Status](https://travis-ci.com/DennisDaddy/MyDiary.svg?branch=challenge3)](https://travis-ci.com/DennisDaddy/MyDiary)
 
 
 MyDiary is an online journal where users can pen down their thoughts and feelings.
@@ -9,9 +10,7 @@ All the data is stored in the database, make sure you have installed PostgreSQL 
 
 This API is built on the top of Flask python web framework.
 
-### Heroku link
- 
-This is the link.. https://madiary.herokuapp.com/
+
 
 ### Setting up the environment
 
