@@ -1,6 +1,6 @@
 """Import flask modules"""
 import datetime
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_restful import Resource, Api
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token
@@ -36,29 +36,28 @@ class EntryList(Resource):
         title = request.get_json()['title']
         content = request.get_json()['content']
 
-        try:
-            cur.execute("INSERT INTO entries (title, content) VALUES('"+title+"', '"+content+"');")
-            return jsonify({'message': 'Entry successfully created!'})
+        if len(title) ==0:
+            return jsonify({'message': 'Fill in the title'})
 
-        except:
-            return jsonify({'message': 'Not successfully try again!'})
+        if len(content) ==0:
+            return jsonify({'message': 'Fill in the content'})
 
-        finally:
-            conn.commit()
+        cur.execute("INSERT INTO entries (title, content) VALUES('"+title+"', '"+content+"');")
+        conn.commit()
         return jsonify({'message': 'Entry successfully created!'})
 
 
 class Entry(Resource):
-    """This is a class for all the entries with IDs"""
+    """This is a class for getting  entries with their IDs"""
+
     def get(self, id):
-        """ This is a method for getting an entry using GET request"""
+        """ This is a method for retreiving an entry using GET request"""
 
         cur.execute("SELECT * FROM entries WHERE ID = %s", (id,))
-        rows = cur.fetchall()
-        output = {}
-        for row in rows:
-            output.update({row[0]: row[1]})
-        return jsonify(output)
+        result = cur.fetchone()
+        if result is None:
+            return jsonify({'message': 'Entry not found!'})
+        return jsonify(result)
 
     def put(self, id):
         """This is a method for modifying an entry using PUT request"""
@@ -73,7 +72,7 @@ class Entry(Resource):
                 cur.execute("UPDATE entries SET title=%s, content=%s WHERE id=%s",\
                 (title, content, id))
             else:
-                return jsonify({'message': 'not success try again'})
+                return jsonify({'message': 'You can only modify an entry the it was created'})
         else:
             return jsonify({'message': 'Not complete no entry'})
         conn.commit()
@@ -101,14 +100,25 @@ class UserRegistration(Resource):
         password = request.get_json()['password']
         password_confirmation = request.get_json()['password_confirmation']
 
-        try:
+        if username is None:
+            return jsonify({'message': 'Fill in username'})
+        if email is None:
+            return jsonify({'message': 'Fill in email'})
+        if password is None:
+            return jsonify({'message': 'Fill in password'})
+        if password != password_confirmation:
+            return jsonify({'message': 'Password should match'})
+        if len(password) < 6:
+            return jsonify({'message': 'Password should more than 6 characters'})
+        
+        cur.execute("SELECT * FROM users WHERE username LIKE '"+username+"'")
+        user = cur.fetchone()
+        if user is None:
             cur.execute("INSERT INTO users (username, email, password, password_confirmation)\
             VALUES('"+username+"', '"+email+"', '"+password+"', '"+password_confirmation+"');")
-        except:
-            return jsonify({'message': 'Try again'})
-
-        finally:
-            conn.commit()        
+        else:
+            return jsonify({'message': 'user already exists'})             
+        conn.commit()
         return jsonify({'message': 'You are successfully registered!'})
 
 
@@ -130,11 +140,23 @@ class UserLogin(Resource):
         return jsonify(access_token=access_token)
     conn.commit()
 
+class UserInfo(Resource):
+    """This is a class for retrieveing user information from the database"""
+
+    def get(self, user_id):
+        """This is a method for retrieving user information using GET request"""
+        cur.execute("SELECT * FROM users WHERE ID = %s", (user_id,))
+        info = cur.fetchone()
+        if info is None:
+            return jsonify({'message': 'That user is not available'})
+        return jsonify(info)
+
 
 api.add_resource(UserRegistration, '/api/v1/auth/register')
 api.add_resource(UserLogin, '/api/v1/auth/login')
-api.add_resource(EntryList, '/api/v1/entries', endpoint = 'entries')
-api.add_resource(Entry, '/api/v1/entries/<int:id>', endpoint = 'entry')
+api.add_resource(UserInfo, '/api/v1/users/<int:user_id>')
+api.add_resource(EntryList, '/api/v1/entries', endpoint='entries')
+api.add_resource(Entry, '/api/v1/entries/<int:id>', endpoint='entry')
 
 if __name__ == '__main__':
     app.run(debug=True)
