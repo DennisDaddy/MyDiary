@@ -33,11 +33,11 @@ class EntryList(Resource):
                 my_list.append(row[2])
         except:
             return jsonify({'message':'Cant retrieve entries'})
-        finally:
-            conn.close()
+        
         return jsonify(my_list)
-
+#@jwt_required
     def post(self):
+        
         """This is a method for creating an entry using POST request"""
         title = request.get_json()['title']
         content = request.get_json()['content']
