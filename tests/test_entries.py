@@ -20,6 +20,10 @@ class EntrylistTestCase(unittest.TestCase):
             'title': 'This is cool one',
             'content': 'This one also is amazing'}
 
+    def test_home(self):
+        result = self.client().get('/') 
+        self.assertEqual(result.status_code,200, {'Message': 'Welcome to MyDiary'})
+
     def test_entry_creation(self):
         """Test creating an entry"""
         tester = self.client().post('/api/v1/entries', data=self.entry)

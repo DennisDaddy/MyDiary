@@ -32,7 +32,7 @@ class MyDiaryTestCase(unittest.TestCase):
     def test_user_info(self):
         """"Test user account information"""
         tester = app.test_client(self)
-        response = tester.get('/diary/api/v1/account')
+        response = tester.get('/diary/api/v1/users/1')
         self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
