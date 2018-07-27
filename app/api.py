@@ -49,7 +49,7 @@ class EntryList(Resource):
 
 
 class Entry(Resource):
-    """This is a class for all the entries with IDs"""
+    """This is a class for getting specific entries with their IDs"""
     def get(self, id):
         """ This is a method for getting an entry using GET request"""
 
@@ -108,7 +108,7 @@ class UserRegistration(Resource):
             return jsonify({'message': 'Try again'})
 
         finally:
-            conn.commit()        
+            conn.commit()
         return jsonify({'message': 'You are successfully registered!'})
 
 
@@ -130,11 +130,23 @@ class UserLogin(Resource):
         return jsonify(access_token=access_token)
     conn.commit()
 
+class UserInfo(Resource):
+    """This is a class for retrieveing user information from the database"""
+
+    def get(self, user_id):
+        """This is a method for retrieving user information using GET request"""
+        cur.execute("SELECT * FROM users WHERE ID = %s", (user_id,))
+        info = cur.fetchone()
+        if info is None:
+            return jsonify({'message': 'That user is not available'})
+        return jsonify(info)
+
 
 api.add_resource(UserRegistration, '/api/v1/auth/register')
 api.add_resource(UserLogin, '/api/v1/auth/login')
-api.add_resource(EntryList, '/api/v1/entries', endpoint = 'entries')
-api.add_resource(Entry, '/api/v1/entries/<int:id>', endpoint = 'entry')
+api.add_resource(UserInfo, '/api/v1/users/<int:user_id>')
+api.add_resource(EntryList, '/api/v1/entries', endpoint='entries')
+api.add_resource(Entry, '/api/v1/entries/<int:id>', endpoint='entry')
 
 if __name__ == '__main__':
     app.run(debug=True)
